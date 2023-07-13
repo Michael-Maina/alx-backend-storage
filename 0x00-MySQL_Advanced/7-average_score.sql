@@ -1,5 +1,6 @@
 -- Create a stored procedure ComputeAverageScoreForUser
 DELIMITER // ;
+DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
 CREATE PROCEDURE ComputeAverageScoreForUser(IN user_id INT)
 BEGIN
 -- Calculate average score and update record in users table
@@ -7,7 +8,7 @@ UPDATE users
 SET average_score = (
     SELECT AVG(score)
     FROM corrections
-    WHERE user_id = user_id
+    WHERE corrections.user_id = user_id
 )
 WHERE id = user_id;
 

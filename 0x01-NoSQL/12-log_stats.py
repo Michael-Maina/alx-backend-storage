@@ -13,24 +13,16 @@ def main():
     nginx = client.logs.nginx
 
     total = nginx.count_documents({})
-    get = nginx.count_documents({"method": "GET"})
-    post = nginx.count_documents({"method": "POST"})
-    put = nginx.count_documents({"method": "PUT"})
-    patch = nginx.count_documents({"method": "PATCH"})
-    delete = nginx.count_documents({"method": "DELETE"})
-    status = nginx.count_documents({"method": "GET", "path": "/status"})
+    print("{} logs".format(total))
 
-    print("""\
-{} logs
-Methods:
-\tmethod GET: {}
-\tmethod POST: {}
-\tmethod PUT: {}
-\tmethod PATCH: {}
-\tmethod DELETE: {}
-{} status check\
-"""
-          .format(total, get, post, put, patch, delete, status))
+    methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    print("Methods:")
+    for method in methods:
+        count = nginx.count_documents({"method": method})
+        print("\tmethod {}: {}".format(method, count))
+
+    status = nginx.count_documents({"method": "GET", "path": "/status"})
+    print("{} status check".format(status))
 
 
 if __name__ == '__main__':

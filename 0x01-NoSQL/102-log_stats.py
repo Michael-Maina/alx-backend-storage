@@ -3,7 +3,6 @@
 Function to count documents fitting certain criteria in a collection in MongoDB
 """
 from pymongo import MongoClient
-from bson.son import SON
 
 
 def main():
@@ -14,29 +13,21 @@ def main():
     nginx = client.logs.nginx
 
     total = nginx.count_documents({})
-    get = nginx.count_documents({"method": "GET"})
-    post = nginx.count_documents({"method": "POST"})
-    put = nginx.count_documents({"method": "PUT"})
-    patch = nginx.count_documents({"method": "PATCH"})
-    delete = nginx.count_documents({"method": "DELETE"})
+    print("{} logs".format(total))
+
+    methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    print("Methods:")
+    for method in methods:
+        count = nginx.count_documents({"method": method})
+        print("\tmethod {}: {}".format(method, count))
+
     status = nginx.count_documents({"method": "GET", "path": "/status"})
+    print("{} status check".format(status))
 
     pipeline = [
         {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
-        {"$sort": SON([("count", -1)])}
+        {"$sort": {"count": -1}}
     ]
-
-    print("""\
-{} logs
-Methods:
-\tmethod GET: {}
-\tmethod POST: {}
-\tmethod PUT: {}
-\tmethod PATCH: {}
-\tmethod DELETE: {}
-{} status check\
-"""
-          .format(total, get, post, put, patch, delete, status))
 
     ips = list(nginx.aggregate(pipeline))
     print("IPs:")

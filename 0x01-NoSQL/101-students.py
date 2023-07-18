@@ -2,7 +2,6 @@
 """
 Function to update a document with an average in a collection in MongoDB
 """
-from bson.son import SON
 
 
 def top_students(mongo_collection):

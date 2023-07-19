@@ -26,14 +26,15 @@ def main():
 
     pipeline = [
         {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}}
+        {"$sort": {"count": -1}},
+        {"$limit": 10}
     ]
 
     ips = list(nginx.aggregate(pipeline))
     print("IPs:")
-    for i in range(10):
+    for ip in ips:
         print("\t{}: {}"
-              .format(ips[i].get('_id'), ips[i].get('count')))
+              .format(ip.get('_id'), ip.get('count')))
 
 
 if __name__ == '__main__':

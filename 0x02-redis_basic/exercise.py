@@ -27,7 +27,9 @@ class Cache():
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Optional[Callable]):
+    def get(self, key: str, fn: Optional[Callable] = None) -> (
+            Union[str, bytes, int, float]
+    ):
         """
         Overrides Redis.get() method
         """
@@ -40,7 +42,7 @@ class Cache():
         """
         Parameterizes the Cache.get() fn to convert value to a string
         """
-        return self.get(key, fn=lambda x: x.decode('utf-8'))
+        return self.get(key, fn=str)
 
     def get_int(self, key: str) -> int:
         """
